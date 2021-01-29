@@ -1,4 +1,4 @@
-# Pay Buddy API
+# RULE VALIDATOR
 
 ## How To
 
