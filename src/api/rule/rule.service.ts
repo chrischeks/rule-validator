@@ -20,51 +20,76 @@ export class RuleService extends UniversalsService {
         }
     }
 
+    // public processValidateInput = async (body, metaData): Promise<IResponse> => {
+    //     try {
+    //         const { rule, data } = body;
+    //         const type: string[] = ["Object]", "Array]", "String]"].filter(item => item === Object.prototype.toString.call(data).split(" ")[1]);
+    //         const validate = {
+    //             "Object]": this.dataIsObject(rule, data),
+    //             "Array]": this.dataIsArray(rule, data),
+    //             "String]": this.dataIsString(rule, data)
+    //         }
+    //         return await validate[type[0]];
+    //     } catch (error) {
+    //         return this.serviceErrorHandler(error, metaData);
+    //     }
+    // }
+
+
     public processValidateInput = async (body, metaData): Promise<IResponse> => {
         try {
             const { rule, data } = body;
-            const type: string[] = ["Object]", "Array]", "String]"].filter(item => item === Object.prototype.toString.call(data).split(" ")[1]);
-            const validate = {
-                "Object]": this.dataIsObject(rule, data),
-                "Array]": this.dataIsArray(rule, data),
-                "String]": this.dataIsString(rule, data)
+            const dataType = Object.prototype.toString.call(data).split(" ")[1];
+            const matchedType: string = ["Object]", "Array]", "String]"].filter(item => item === dataType)[0];
+            const { field, condition, conditionValue } = await this.setRule(rule);
+            const fieldSplit = field.split(".")
+            const nestedField = fieldSplit.length > 1 ? true : false;
+            if (!nestedField && data[field] && matchedType === "Object]") {
+                return this.validateCondition(condition, data[fieldSplit[0]], conditionValue, field);
+            } else if (nestedField && data[fieldSplit[0]][fieldSplit[1]]) {
+                return this.validateCondition(condition, data[fieldSplit[0]][fieldSplit[1]], conditionValue, field);
+            } else if (data[field] && matchedType === "String]") {
+                return this.validateCondition(condition, data[field], conditionValue, field);
+            } else if (data[field] && matchedType === "Array]")
+                return this.validateCondition(condition, data[field], conditionValue, field);
+            else {
+                return this.failureResponse(`field ${field} is missing from data.`, null);
             }
-            return await validate[type[0]];
         } catch (error) {
             return this.serviceErrorHandler(error, metaData);
         }
     }
 
-    private dataIsObject = async (rule, data) => {
-        const { field, condition, conditionValue } = await this.setRule(rule);
-        const fieldSplit = field.split(".")
-        const nestedField = fieldSplit.length > 1 ? true : false;
-        if (!nestedField && data[field]) {
-            return this.validateCondition(condition, data[fieldSplit[0]], conditionValue, field);
-        } else if (nestedField && data[fieldSplit[0]][fieldSplit[1]]) {
-            return this.validateCondition(condition, data[fieldSplit[0]][fieldSplit[1]], conditionValue, field);
-        } else {
-            return this.failureResponse(`field ${field} is missing from data.`, null);
-        }
-    }
+    // private dataIsObject = async (rule, data) => {
+    //     const { field, condition, conditionValue } = await this.setRule(rule);
+    //     const fieldSplit = field.split(".")
+    //     const nestedField = fieldSplit.length > 1 ? true : false;
+    //     if (!nestedField && data[field]) {
+    //         return this.validateCondition(condition, data[fieldSplit[0]], conditionValue, field);
+    //     } else if (nestedField && data[fieldSplit[0]][fieldSplit[1]]) {
+    //         return this.validateCondition(condition, data[fieldSplit[0]][fieldSplit[1]], conditionValue, field);
+    //     } else {
+    //         return this.failureResponse(`field ${field} is missing from data.`, null);
+    //     }
+    // }
 
-    private dataIsString = async (rule, data) => {
-        const { field, condition, conditionValue } = await this.setRule(rule);
-        if (data[field]) {
-            return this.validateCondition(condition, data[field], conditionValue, field);
-        } else {
-            return this.failureResponse(`field ${field} is missing from data.`, null);
-        }
-    }
+    // private dataIsString = async (rule, data) => {
+    //     const { field, condition, conditionValue } = await this.setRule(rule);
+    //     if (data[field]) {
+    //         return this.validateCondition(condition, data[field], conditionValue, field);
+    //     } else {
+    //         return this.failureResponse(`field ${field} is missing from data.`, null);
+    //     }
+    // }
 
-    private dataIsArray = async (rule, data) => {
-        const { field, condition, conditionValue } = await this.setRule(rule);
-        if (data[field]) {
-            return this.validateCondition(condition, data[field], conditionValue, field);
-        } else {
-            return this.failureResponse(`field ${field} is missing from data.`, null);
-        }
-    }
+    // private dataIsArray = async (rule, data) => {
+    //     const { field, condition, conditionValue } = await this.setRule(rule);
+    //     if (data[field]) {
+    //         return this.validateCondition(condition, data[field], conditionValue, field);
+    //     } else {
+    //         return this.failureResponse(`field ${field} is missing from data.`, null);
+    //     }
+    // }
 
 
     private validateCondition = async (condition, fieldVal, conditionVal, field): Promise<IResponse> => {

@@ -1,8 +1,6 @@
 import * as express from 'express';
-// import { inputValidator } from '../../util/rule.middleware';
 import { RuleController } from './rule.controller';
-import { expressValid } from './rule.express';
-// import { InputValidator } from './rule.validator';
+import { expressValid } from './rule.validator';
 export const ruleRouter = express.Router();
 
 
