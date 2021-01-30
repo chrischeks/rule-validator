@@ -21,7 +21,11 @@ export class RuleController extends UniversalsController {
   public validateInput = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { ip, method, originalUrl, body } = req;
     try {
-      const response: IResponse = await new RuleService().processValidateInput(body, { ip, method, originalUrl });
+      const response: IResponse = await new RuleService().processValidateInput(body, {
+        ip,
+        method,
+        originalUrl
+      });
       this.controllerResponseHandler(response, res);
     } catch (error) {
       this.controllerErrorHandler(req, res, error);
