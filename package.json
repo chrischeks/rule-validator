@@ -21,8 +21,6 @@
     "node": "14.15.4"
   },
   "dependencies": {
-    "chai": "^4.2.0",
-    "chai-http": "^4.3.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -30,7 +28,6 @@
     "express": "^4.17.1",
     "express-validator": "^6.9.2",
     "helmet": "^4.4.1",
-    "mocha": "^8.2.1",
     "winston": "^3.3.3"
   },
   "devDependencies": {
@@ -45,9 +42,11 @@
     "@types/winston": "^2.4.4",
     "@typescript-eslint/eslint-plugin": "^4.14.1",
     "@typescript-eslint/parser": "^4.14.1",
+    "chai": "^4.2.0",
     "eslint": "^7.18.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-prettier": "^3.3.1",
+    "mocha": "^8.2.1",
     "nodemon": "^2.0.7",
     "pre-push": "^0.1.1",
     "prettier": "^2.2.1",
