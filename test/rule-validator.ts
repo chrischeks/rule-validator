@@ -1,17 +1,19 @@
+
+
 import { server } from '../src/server';
 import * as chai from 'chai';
-import chaiHttp = require('chai-http');
-chai.use(chaiHttp);
 import { expect } from "chai";
 import 'mocha';
+import request = require("supertest");
 
 
 
 describe('RULE VALIDATION API /GET', () => {
-    it('should return response on call', async () => {
-        return await chai.request(server).get('/')
+    it('should return user data', async () => {
+        return await request(server)
+            .get('/')
             .then(res => {
-                expect(res).to.have.status(200);
+                expect(res.status).to.equals(200);
                 expect(res.body.data.name).to.exist;
                 expect(res.body.data.github).to.exist;
                 expect(res.body.data.email).to.exist;
@@ -32,11 +34,11 @@ describe('RULE VALIDATION API /POST', () => {
             },
             "data": ["The Nauvoo", "The Razorback", "The Roci", "Tycho"]
         }
-        return await chai.request(server).
-            post('/validate-rule')
+        return await request(server)
+            .post('/validate-rule')
             .send(payload)
             .then(res => {
-                expect(res).to.have.status(400);
+                expect(res.status).to.equals(400);
                 expect(res.body.message).to.be.equal("field 5 is missing from data.");
                 expect(res.body.status).to.be.equal("error");
                 expect(res.body.data).to.be.equal(null);
@@ -53,12 +55,12 @@ describe('RULE VALIDATION API /POST', () => {
             },
             "data": "damien-marley"
         }
-        return await chai.request(server).
+        return await request(server).
             post('/validate-rule')
             .send(payload)
             .then(res => {
-                expect(res).to.have.status(400);
-                expect(res.body.message).to.be.equal("field 5 is missing from data.");
+                expect(res.status).to.equals(400);
+                expect(res.body.message).to.be.equal("field 0 failed validation.");
                 expect(res.body.status).to.be.equal("error");
                 expect(res.body.data.validation.error).to.be.equal(true);
                 expect(res.body.data.validation.field).to.be.equal("0");
@@ -87,11 +89,11 @@ describe('RULE VALIDATION API /POST', () => {
                 }
             }
         }
-        return await chai.request(server).
+        return await request(server).
             post('/validate-rule')
             .send(payload)
             .then(res => {
-                expect(res).to.have.status(200);
+                expect(res.status).to.equals(200);
                 expect(res.body.message).to.be.equal("field missions.count successfully validated.");
                 expect(res.body.status).to.be.equal("success");
                 expect(res.body.data.validation.error).to.be.equal(false);
@@ -117,11 +119,11 @@ describe('RULE VALIDATION API /POST', () => {
                 }
             }
         }
-        return await chai.request(server).
+        return await request(server).
             post('/validate-rule')
             .send(payload)
             .then(res => {
-                expect(res).to.have.status(400);
+                expect(res.status).to.equals(400);
                 expect(res.body.message).to.be.equal("rule is required.");
                 expect(res.body.status).to.be.equal("error");
                 expect(res.body.data).to.be.equal(null);
@@ -137,11 +139,11 @@ describe('RULE VALIDATION API /POST', () => {
                 "condition_value": 30
             }
         }
-        return await chai.request(server).
+        return await request(server).
             post('/validate-rule')
             .send(payload)
             .then(res => {
-                expect(res).to.have.status(400);
+                expect(res.status).to.equals(400);
                 expect(res.body.message).to.be.equal("data is required.");
                 expect(res.body.status).to.be.equal("error");
                 expect(res.body.data).to.be.equal(null);
@@ -158,11 +160,10 @@ describe('RULE VALIDATION API /POST', () => {
             },
             "data": 2
         }
-        return await chai.request(server).
+        return await request(server).
             post('/validate-rule')
             .send(payload)
             .then(res => {
-                expect(res).to.have.status(400);
                 expect(res.body.message).to.be.equal("data should be either a JSON object, an array, or a string.");
                 expect(res.body.status).to.be.equal("error");
                 expect(res.body.data).to.be.equal(null);
@@ -171,19 +172,12 @@ describe('RULE VALIDATION API /POST', () => {
 
 
     it("should return 'Invalid JSON payload passed.'", async () => {
-        const payload = {
-            rule: {
-                "field": "5",
-                "condition": "contains",
-                "condition_value": "rocinante"
-            },
-            "data": ["The Nauvoo", "The Razorback", "The Roci", "Tycho"]
-        }
-        return await chai.request(server).
+
+        return await request(server).
             post('/validate-rule')
-            .send(payload)
+            .send('{"invalid"}')
+            .type('json')
             .then(res => {
-                expect(res).to.have.status(400);
                 expect(res.body.message).to.be.equal("Invalid JSON payload passed.");
                 expect(res.body.status).to.be.equal("error");
                 expect(res.body.data).to.be.equal(null);
@@ -193,18 +187,16 @@ describe('RULE VALIDATION API /POST', () => {
 
     it("should return 'field is required.'", async () => {
         const payload = {
-            rule: {
-
+            "rule": {
                 "condition": "contains",
                 "condition_value": "rocinante"
             },
             "data": ["The Nauvoo", "The Razorback", "The Roci", "Tycho"]
         }
-        return await chai.request(server).
+        return await request(server).
             post('/validate-rule')
             .send(payload)
             .then(res => {
-                expect(res).to.have.status(400);
                 expect(res.body.message).to.be.equal("field is required.");
                 expect(res.body.status).to.be.equal("error");
                 expect(res.body.data).to.be.equal(null);
@@ -219,11 +211,10 @@ describe('RULE VALIDATION API /POST', () => {
             },
             "data": ["The Nauvoo", "The Razorback", "The Roci", "Tycho"]
         }
-        return await chai.request(server).
+        return await request(server).
             post('/validate-rule')
             .send(payload)
             .then(res => {
-                expect(res).to.have.status(400);
                 expect(res.body.message).to.be.equal("condition is required.");
                 expect(res.body.status).to.be.equal("error");
                 expect(res.body.data).to.be.equal(null);
@@ -233,17 +224,16 @@ describe('RULE VALIDATION API /POST', () => {
 
     it("should return 'condition_value is required.'", async () => {
         const payload = {
-            rule: {
+            "rule": {
                 "field": "7",
                 "condition": "contains"
             },
             "data": ["The Nauvoo", "The Razorback", "The Roci", "Tycho"]
         }
-        return await chai.request(server).
+        return await request(server).
             post('/validate-rule')
             .send(payload)
             .then(res => {
-                expect(res).to.have.status(400);
                 expect(res.body.message).to.be.equal("condition_value is required.");
                 expect(res.body.status).to.be.equal("error");
                 expect(res.body.data).to.be.equal(null);
