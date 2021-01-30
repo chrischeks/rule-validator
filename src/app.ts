@@ -33,7 +33,9 @@ app.use(compression());
 //   limit: '50mb'
 // }));
 app.use((req: Request, res: Response, next: NextFunction) => {
-  bodyParser.json({ limit: '10mb' })(req, res, (err) => {
+  bodyParser.json({
+    limit: '10mb'
+  })(req, res, (err) => {
     if (err) {
       res.status(400).json({
         message: 'Invalid JSON payload passed.',

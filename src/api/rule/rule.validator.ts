@@ -5,7 +5,7 @@ import { body, validationResult } from 'express-validator';
 
 export class expressValid extends UniversalsController {
   acceptedTypes: string[] = ['Object]', 'Array]', 'String]'];
-  public userValidationRules = (): any[] => {
+  public validationRules = (): any[] => {
     return [
       body('rule')
         .exists()

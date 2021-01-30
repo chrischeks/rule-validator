@@ -3,11 +3,21 @@ import { IResponse } from '../../util/interface/rule.interface';
 
 export class UniversalsService {
   protected failureResponse = async (message: string, data): Promise<IResponse> => {
-    return { statusCode: 400, message, status: 'error', data };
+    return {
+      statusCode: 400,
+      message,
+      status: 'error',
+      data
+    };
   };
 
   protected successResponse = async (message: string, data): Promise<IResponse> => {
-    return { statusCode: 200, message, status: 'success', data };
+    return {
+      statusCode: 200,
+      message,
+      status: 'success',
+      data
+    };
   };
 
   protected serviceErrorHandler = async (error, metaData): Promise<IResponse> => {

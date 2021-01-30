@@ -50,7 +50,13 @@ export class RuleService extends BaseService {
     if (condition === 'contains') validateData[condition] = fieldVal.includes(conditionVal);
 
     if (validateData[condition])
-      return this.successResponse(`field ${field} successfully validated.`, await this.dataPortion(false, field, fieldVal, condition, conditionVal));
-    return this.failureResponse(`field ${field} failed validation.`, await this.dataPortion(true, field, fieldVal, condition, conditionVal));
+      return this.successResponse(
+        `field ${field} successfully validated.`,
+        await this.dataPortion(false, field, fieldVal, condition, conditionVal)
+      );
+    return this.failureResponse(
+      `field ${field} failed validation.`,
+      await this.dataPortion(true, field, fieldVal, condition, conditionVal)
+    );
   };
 }
