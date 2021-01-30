@@ -6,30 +6,30 @@ const logger = createLogger({
   transports: [
     new transports.Console({
       level: 'info',
-      format: format.combine(format.colorize(), format.timestamp(), format.simple()),
+      format: format.combine(format.colorize(), format.timestamp(), format.simple())
     }),
     new transports.File({
       level: 'info',
       format: format.combine(format.timestamp(), format.json()),
-      filename: path.join(__dirname, '../../../logs/combined.log'),
+      filename: path.join(__dirname, '../../../logs/combined.log')
     }),
     new transports.File({
       level: 'warn',
       format: format.combine(format.timestamp(), format.json()),
-      filename: path.join(__dirname, '../../../logs/warn.log'),
+      filename: path.join(__dirname, '../../../logs/warn.log')
     }),
 
     new transports.File({
       level: 'error',
       format: format.combine(format.timestamp(), format.json()),
-      filename: path.join(__dirname, '../../../logs/errors.log'),
-    }),
+      filename: path.join(__dirname, '../../../logs/errors.log')
+    })
   ],
   exceptionHandlers: [
     new transports.File({
-      filename: path.join(__dirname, '../../../logs/exceptions.log'),
-    }),
-  ],
+      filename: path.join(__dirname, '../../../logs/exceptions.log')
+    })
+  ]
 });
 
 export default logger;
