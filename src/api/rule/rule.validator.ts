@@ -23,7 +23,7 @@ export class expressValid extends UniversalsController {
         .exists()
         .withMessage('data is required.')
         .custom((val) => this.acceptedTypes.includes(Object.prototype.toString.call(val).split(' ')[1]))
-        .withMessage('data should be either a JSON object, an array, or a string')
+        .withMessage('data should be either a JSON object, an array, or a string.')
     ];
   };
 
