@@ -7,3 +7,4 @@ const validator = new expressValid();
 ruleRouter.get('/', new RuleController().baseResponse);
 
 ruleRouter.post('/validate-rule', validator.validationRules(), validator.validate, new RuleController().validateInput);
+

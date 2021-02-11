@@ -18,6 +18,7 @@ export class RuleController extends UniversalsController {
     }
   };
 
+
   public validateInput = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { ip, method, originalUrl, body } = req;
     try {

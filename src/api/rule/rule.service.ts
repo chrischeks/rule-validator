@@ -2,6 +2,7 @@ import { IResponse } from '../../util/interface/rule.interface';
 import { BaseService } from './rule.base-service';
 
 export class RuleService extends BaseService {
+
   public processBaseResponse = async (metaData): Promise<IResponse> => {
     try {
       const data = {
@@ -17,6 +18,7 @@ export class RuleService extends BaseService {
     }
   };
 
+
   public processValidateInput = async (body, metaData): Promise<IResponse> => {
     try {
       const { rule, data } = body;
@@ -25,14 +27,15 @@ export class RuleService extends BaseService {
       const { field, condition, conditionValue } = await this.setRule(rule);
       const fieldSplit = field.split('.');
       const nestedField = fieldSplit.length > 1 ? true : false;
-      if (!nestedField && data[field] && matchedType === 'Object]') {
+      if (!nestedField && data.hasOwnProperty(field) && matchedType === 'Object]') {
         return this.validateCondition(condition, data[fieldSplit[0]], conditionValue, field);
-      } else if (nestedField && data[fieldSplit[0]][fieldSplit[1]]) {
+      } else if (nestedField && data[fieldSplit[0]].hasOwnProperty(fieldSplit[1])) {
         return this.validateCondition(condition, data[fieldSplit[0]][fieldSplit[1]], conditionValue, field);
-      } else if (data[field] && matchedType === 'String]') {
+      } else if (data.hasOwnProperty(field) && matchedType === 'String]') {
         return this.validateCondition(condition, data[field], conditionValue, field);
-      } else if (data[field] && matchedType === 'Array]') return this.validateCondition(condition, data[field], conditionValue, field);
-      else {
+      } else if (data.hasOwnProperty(field) && matchedType === 'Array]') {
+        return this.validateCondition(condition, data[field], conditionValue, field)
+      } else {
         return this.failureResponse(`field ${field} is missing from data.`, null);
       }
     } catch (error) {

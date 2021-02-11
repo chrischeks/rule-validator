@@ -105,6 +105,73 @@ describe('RULE VALIDATION API /POST', () => {
     })
 
 
+
+    it("should return 'field 0.age successfully validated.'", async () => {
+        const payload = {
+            "rule": {
+                "field": "0.age",
+                "condition": "gte",
+                "condition_value": 0
+            },
+            "data": [
+                {
+                    "age": 0,
+                    "ohlms": 45
+                },
+                2,
+                5,
+                90
+            ]
+        }
+        return await request(server).
+            post('/validate-rule')
+            .send(payload)
+            .then(res => {
+                expect(res.status).to.equals(200);
+                expect(res.body.message).to.be.equal("field 0.age successfully validated.");
+                expect(res.body.status).to.be.equal("success");
+                expect(res.body.data.validation.error).to.be.equal(false);
+                expect(res.body.data.validation.field).to.be.equal("0.age");
+                expect(res.body.data.validation.field_value).to.be.equal(0);
+                expect(res.body.data.validation.condition).to.be.equal("gte");
+                expect(res.body.data.validation.condition_value).to.be.equal(0);
+            })
+    })
+
+
+    it("should return 'field missions.count successfully validated.'", async () => {
+        const payload = {
+            "rule": {
+                "field": "missions.count",
+                "condition": "eq",
+                "condition_value": 0
+            },
+            "data": {
+                "failed_missions": 0,
+                "missions": {
+                    "count": 0,
+                    "allTimeCount": 45
+                },
+                "age": 25
+            }
+        }
+        return await request(server).
+            post('/validate-rule')
+            .send(payload)
+            .then(res => {
+                expect(res.status).to.equals(200);
+                expect(res.body.message).to.be.equal("field missions.count successfully validated.");
+                expect(res.body.status).to.be.equal("success");
+                expect(res.body.data.validation.error).to.be.equal(false);
+                expect(res.body.data.validation.field).to.be.equal("missions.count");
+                expect(res.body.data.validation.field_value).to.be.equal(0);
+                expect(res.body.data.validation.condition).to.be.equal("eq");
+                expect(res.body.data.validation.condition_value).to.be.equal(0);
+            })
+    })
+
+
+
     it("should return 'rule is required.'", async () => {
         const payload = {
             "data": {

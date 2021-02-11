@@ -29,9 +29,7 @@ const app: Application = express();
 app.set('port', process.env.PORT || 6111);
 app.use(cors());
 app.use(compression());
-// app.use(bodyParser.json({
-//   limit: '50mb'
-// }));
+
 app.use((req: Request, res: Response, next: NextFunction) => {
   bodyParser.json({
     limit: '10mb'
